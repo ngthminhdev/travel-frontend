@@ -1,0 +1,70 @@
+$height: 70px;
+$text-color: #2d4271;
+.header {
+  display: block;
+  height: 90px;
+  width: 100%;
+  padding: 0 12px;
+  background-color: #ffffff;
+
+  nav {
+    width: 100%;
+    height: 100%;
+
+    .left.logo {
+      float: left;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 10%;
+      img {
+        width: 150px;
+      }
+    }
+
+    .item {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      width: 8%;
+      padding: 0 .5rem;
+      margin: 0 0.5rem;
+      font-size: 16px;
+      font-weight: 600;
+      color: $text-color;
+    }
+
+    .right {
+      float: right;
+      width: auto;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      flex-direction: row;
+      position: relative;
+
+        .search-input {
+          padding: 1em 1em;
+          margin: 0 1em;
+          outline-color: #ffc709;
+          border: 2px solid #ffc709;
+          border-radius: 0.5rem;
+        }
+
+        .search-icon {
+          position: absolute;
+          right: 48px;
+          cursor: pointer;
+          z-index: 100;
+        }
+
+        i {
+          svg {
+            width: 32px;
+            scale: 2;
+          }
+        }
+    }
+
+  }
+}
