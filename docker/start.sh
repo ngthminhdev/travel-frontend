@@ -9,7 +9,7 @@ CONFIG_ARGS="s|CONFIG_NODE_ENV|${CONFIG_NODE_ENV}|g;\
 
 sed -i -e "$CONFIG_ARGS" .env
 
-yarn add -g serve
+yarn global add serve
 
 serve -s -l 8080 build
 

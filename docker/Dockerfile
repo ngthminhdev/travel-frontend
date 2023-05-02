@@ -22,8 +22,8 @@ EXPOSE 8080
 
 WORKDIR /SERVICE
 
-RUN npm install -f
+RUN yarn
 
-RUN npm run build
+RUN yarn build
 
 ENTRYPOINT ["/start.sh"]
