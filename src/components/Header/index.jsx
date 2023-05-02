@@ -46,9 +46,7 @@ const Header = () => {
                     <div className="search-icon">
                         <i><AiOutlineSearch/></i>
                     </div>
-                    <div className="cursor-pointer user-icon" onClick={() => {
-                        userInfo ? navigate('/user') : navigate('/login')
-                    }}>
+                    <div className="cursor-pointer user-icon" >
                         {userInfo ?
                             (
                                 userInfo?.avatar ? <Loading/> :
@@ -56,15 +54,20 @@ const Header = () => {
                                         onMouseOver={() => setUserMenuOpen(true)}
                                         onMouseLeave={() => setUserMenuOpen(false)}
                                     >
-                                        <Avatar name={userInfo.username} size="35" round={true}/>
+                                        <div onClick={() => navigate('/profile')}>
+                                            <Avatar name={userInfo.username} size="35" round={true}/>
+                                        </div>
                                         {userMenuOpen &&
-                                            <div className="z-50 absolute top-10 right-0">
+                                            <div className="z-50 absolute top-10 right-0"
+                                            >
                                                 <UserMenu/>
                                             </div>
                                         }
                                     </div>
                             ) :
-                            <i><FaRegUser/></i>
+                            <div onClick={() => navigate('/login')}>
+                                <i><FaRegUser/></i>
+                            </div>
                         }
                     </div>
                 </div>
