@@ -12,10 +12,12 @@ const UserMenu = () => {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const handleLogOut = () => {
+        setIsSubmitting(true);
+        // console.log(JSON.parse(localStorage.getItem(LocalStorageItem.AccessToken)))
         axiosAuth({
             method: 'POST',
             url: '/auth/logout'
-        }).then(res => {
+        }).then((res) => {
             localStorage.removeItem(LocalStorageItem.AccessToken);
             localStorage.removeItem(LocalStorageItem.DeviceExpired);
             dispatch(setUserInfo(null));
@@ -23,7 +25,6 @@ const UserMenu = () => {
             toast.success(res.data.message)
             setTimeout(() => window.location.href = '/', 3000)
         }).catch((e) => {
-                console.log(e)
                 toast.error(e.response.data.message)
             }
         )

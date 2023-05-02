@@ -38,12 +38,12 @@ const Login = () => {
                 data: data,
             });
             const userData = await res.data.data;
-            dispatch(setUserInfo(userData))
             localStorage.setItem(LocalStorageItem.AccessToken, JSON.stringify(userData.accessToken));
             localStorage.setItem(LocalStorageItem.DeviceExpired, JSON.stringify(userData.expiredAt));
+            dispatch(setUserInfo(userData))
 
             toast.success(res.data.message)
-            setTimeout(() => navigate(`/`), 3000)
+            setTimeout(() => window.location.href = '/', 3000)
         } catch (e) {
             setIsSubmitting(false);
             toast.error(e.response.data.message)
