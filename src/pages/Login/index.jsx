@@ -5,16 +5,22 @@ import {useNavigate} from "react-router-dom";
 import * as Yup from "yup";
 import {yupResolver} from "@hookform/resolvers/yup";
 import {toast, ToastContainer} from "react-toastify";
-import axios from "axios";
+import {LocalStorageItem} from "../../app/enum";
+import {axiosDevice} from "../../app/utils/axios.util";
+import {useStore} from "../../store/hooks";
+import {setUserInfo} from "../../store/actions";
 
 const Login = () => {
     const navigate = useNavigate();
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    const [state, dispatch] = useStore();
+
     const schema = Yup.object().shape({
         accountName: Yup.string().required("Tên tài khoản là bắt buộc"),
         password: Yup.string().required("Mật khẩu là bắt buộc"),
     });
+
 
     const method = useForm({resolver: yupResolver(schema)})
     const {
@@ -26,12 +32,18 @@ const Login = () => {
     const onSubmit = async (data) => {
         try {
             setIsSubmitting(true);
-            const res = await axios({
+            const res = await axiosDevice({
                 method: 'POST',
-                url: `${process.env.REACT_APP_ENDPOINT}/auth/login`,
-                data: data
+                url: `/auth/login`,
+                data: data,
             });
-            localStorage.setItem('user', JSON.stringify(res.data.data))
+            const userData = await res.data.data;
+            dispatch(setUserInfo(userData))
+            localStorage.setItem(LocalStorageItem.AccessToken, JSON.stringify(userData.accessToken));
+            localStorage.setItem(LocalStorageItem.DeviceExpired, JSON.stringify(userData.expiredAt));
+
+            toast.success(res.data.message)
+            setTimeout(() => navigate(`/`), 3000)
         } catch (e) {
             setIsSubmitting(false);
             toast.error(e.response.data.message)
@@ -53,7 +65,7 @@ const Login = () => {
                             <input
                                 {...register('accountName')}
                                 className="appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                id="accountName" type="accountName" placeholder="Nhập số điện thoại của bạn"/>
+                                id="accountName" type="accountName" placeholder="Nhập tài khoản của bạn"/>
                             {errors.accountName && <p className="text-red-700">{errors.accountName.message}</p>}
                         </div>
                         <div className="mb-4">

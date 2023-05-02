@@ -16,6 +16,7 @@ $text-color: #2d4271;
       display: flex;
       justify-content: center;
       align-items: center;
+      text-align: center;
       width: 10%;
       img {
         width: 150px;
@@ -26,11 +27,12 @@ $text-color: #2d4271;
       width: 70%;
       .item {
         display: flex;
+        text-align: center;
         justify-content: center;
         align-items: center;
-        width: 12%;
+        width: 12.5%;
         padding: 0 .5rem;
-        font-size: 16px;
+        font-size: 14px;
         font-weight: 600;
         color: $text-color;
       }

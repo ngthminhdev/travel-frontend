@@ -1,38 +1,39 @@
-import React from 'react';
+import React, {useState} from 'react';
 import "./header.scss";
 import Logo from "../../public/icons/logo.png"
-import {AiOutlineCaretDown, AiOutlineSearch, AiOutlineUser} from "react-icons/ai";
+import {AiOutlineSearch} from "react-icons/ai";
 import {useNavigate} from "react-router-dom";
+import {useStore} from "../../store/hooks";
+import Avatar from "react-avatar";
+import {FaRegUser} from "react-icons/fa";
+import Loading from "../Loading";
+import UserMenu from "../UserMenu";
 
+const endPoint = process.env.REACT_APP_DOMAIN;
 const Header = () => {
     const navigate = useNavigate();
+    const [state, dispatch] = useStore();
+    const {userInfo} = state;
+
+    const [userMenuOpen, setUserMenuOpen] = useState(false)
 
     return (
         <header className="header fixed-top">
             <nav className="flex flex-row justify-between">
                 <div className="left logo">
-                    <a href='http://localhost:8080'>
+                    <a href={endPoint}>
                         <img src={Logo}/>
                     </a>
                 </div>
                 <div className="middle flex flex-row">
                     <div className="item">
-                        Du Lịch <i><AiOutlineCaretDown/></i>
+                        Du Lịch
                     </div>
                     <div className="item">
-                        Vietravel MICE
+                        Tour
                     </div>
                     <div className="item">
-                        Vận chuyển <i><AiOutlineCaretDown/></i>
-                    </div>
-                    <div className="item">
-                        Tin tức
-                    </div>
-                    <div className="item">
-                        Khuyến mãi <i><AiOutlineCaretDown/></i>
-                    </div>
-                    <div className="item">
-                        VietravelPlus
+                        Bài viết
                     </div>
                     <div className="item">
                         Liên hệ
@@ -45,8 +46,26 @@ const Header = () => {
                     <div className="search-icon">
                         <i><AiOutlineSearch/></i>
                     </div>
-                    <div className="cursor-pointer" onClick={() => navigate('/login')}>
-                        <i><AiOutlineUser/></i>
+                    <div className="cursor-pointer user-icon" onClick={() => {
+                        userInfo ? navigate('/user') : navigate('/login')
+                    }}>
+                        {userInfo ?
+                            (
+                                userInfo?.avatar ? <Loading/> :
+                                    <div className="relative"
+                                        onMouseOver={() => setUserMenuOpen(true)}
+                                        onMouseLeave={() => setUserMenuOpen(false)}
+                                    >
+                                        <Avatar name={userInfo.username} size="35" round={true}/>
+                                        {userMenuOpen &&
+                                            <div className="z-50 absolute top-10 right-0">
+                                                <UserMenu/>
+                                            </div>
+                                        }
+                                    </div>
+                            ) :
+                            <i><FaRegUser/></i>
+                        }
                     </div>
                 </div>
             </nav>

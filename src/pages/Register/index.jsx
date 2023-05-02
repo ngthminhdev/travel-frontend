@@ -4,8 +4,8 @@ import {useForm} from "react-hook-form";
 import {useNavigate} from "react-router-dom";
 import * as Yup from "yup";
 import {yupResolver} from '@hookform/resolvers/yup';
-import axios from "axios";
-import { ToastContainer, toast } from 'react-toastify';
+import {toast, ToastContainer} from 'react-toastify';
+import {axiosDevice} from "../../app/utils/axios.util";
 
 
 const Register = () => {
@@ -31,9 +31,9 @@ const Register = () => {
     const onSubmit = async (data) => {
         try {
             setIsSubmitting(true);
-            const res = await axios({
+            const res = await axiosDevice({
                 method: 'POST',
-                url: `${process.env.REACT_APP_ENDPOINT}/auth/register`,
+                url: `/auth/register`,
                 data: data
             });
             toast.success(res.data.message)
@@ -59,7 +59,7 @@ const Register = () => {
                             <input
                                 {...register('accountName')}
                                 className="appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                id="accountName" type="accountName" placeholder="Nhập số điện thoại của bạn"/>
+                                id="accountName" type="accountName" placeholder="Nhập tên tài khoản của bạn"/>
                             {errors.accountName && <p className="text-red-700">{errors.accountName.message}</p>}
 
                         </div>
@@ -70,7 +70,7 @@ const Register = () => {
                             <input
                                 {...register('username')}
                                 className="appearance-none border rounded w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                                id="username" type="username" placeholder="Nhập tên của bạn"/>
+                                id="username" type="username" placeholder="Nhập họ và tên của bạn"/>
                             {errors.username && <p className="text-red-700">{errors.username.message}</p>}
 
                         </div>

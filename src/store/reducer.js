@@ -1,15 +1,15 @@
-import {SET_GOAL} from "./constants";
+import {SET_USER_INFO} from "./constants";
 
 export const initState = {
-    goal: '',
+    userInfo: null,
 }
 
 function reducer(state, action) {
     switch (action.type) {
-        case SET_GOAL:
+        case SET_USER_INFO:
             return {
                 ...state,
-                goal: action.payload
+                userInfo: action.payload
             }
         default:
             throw new Error('Invalid action!')

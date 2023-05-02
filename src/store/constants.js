@@ -1,1 +1,2 @@
-export const SET_GOAL = 'SET_GOAL'
+
+export const SET_USER_INFO = 'SET_USER_INFO';

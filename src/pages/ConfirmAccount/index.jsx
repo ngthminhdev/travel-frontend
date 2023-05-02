@@ -2,8 +2,8 @@ import React, {useState} from 'react';
 import "./confirmAccount.scss"
 import {useForm} from "react-hook-form";
 import {useNavigate, useParams} from "react-router-dom";
-import axios from "axios";
 import {toast, ToastContainer} from "react-toastify";
+import {axiosDevice} from "../../app/utils/axios.util";
 
 const ConfirmAccount = () => {
     const navigate = useNavigate();
@@ -16,9 +16,9 @@ const ConfirmAccount = () => {
     const onSubmit = async (data) => {
         try {
             setIsSubmitting(true);
-            const res = await axios({
+            const res = await axiosDevice({
                 method: 'POST',
-                url: `${process.env.REACT_APP_ENDPOINT}/auth/verify-otp/${userId}`,
+                url: `/auth/verify-otp/${userId}`,
                 data: data
             });
             toast.success(res.data.message);

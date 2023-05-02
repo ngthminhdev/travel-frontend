@@ -1,0 +1,57 @@
+$text-color: #2d4271;
+
+.tour {
+  height: 100%;
+  color: $text-color;
+  z-index: 10;
+
+  ul {
+    list-style: none;
+
+    li {
+      div {
+        width: 100%;
+        max-width: 180px;
+        height: 100%;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        text-align: center;
+        font-weight: 600;
+        font-size: 14px;
+        padding: 1rem!important;
+
+        &:hover {
+          cursor: pointer;
+        }
+      }
+    }
+  }
+  .tab-contents {
+
+    .start {
+      padding: 1em;
+      border: 3px solid #ffc709;
+      border-radius: 20px;
+    }
+
+    .arrow {
+      i {
+        scale: 2.5
+      }
+    }
+
+    .middle {
+      padding: 1em;
+      border: 3px solid #ffc709;
+      border-radius: 20px;
+    }
+
+    .date-picker {
+      padding: 1em;
+      border: 3px solid #ffc709;
+      border-radius: 20px;
+    }
+  }
+}

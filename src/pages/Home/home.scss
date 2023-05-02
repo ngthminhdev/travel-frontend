@@ -1,0 +1,54 @@
+$text-color: #2d4271;
+
+.home {
+  height: auto;
+  color: $text-color;
+  z-index: 10;
+
+  .background {
+    position: absolute;
+    top: 100px;
+  }
+
+  .container {
+    .tab-container {
+      z-index: 10;
+
+      ul {
+        list-style: none;
+
+        li {
+          div {
+            i {
+              scale: 1.5;
+              .i {
+                scale: 0.75!important;
+              }
+            }
+
+            width: 100%;
+            max-width: 180px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-weight: 600;
+            padding: 2rem;
+
+            &:hover {
+              cursor: pointer;
+            }
+          }
+        }
+      }
+
+      .tab-content {
+        min-height: 300px;
+      }
+    }
+  }
+
+
+}

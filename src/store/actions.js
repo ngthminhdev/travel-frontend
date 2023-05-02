@@ -1,6 +1,6 @@
-import {ADD_CRITERIA, ADD_ITEM, ADD_NUMBER_OF_ITEM, CRITERIA_ITEM_RANK, CRITERIA_RANK, SET_GOAL} from "./constants";
+import {SET_USER_INFO} from "./constants";
 
-export const setGoal = (payload) =>({
-    type: SET_GOAL,
+export const setUserInfo = (payload) => ({
+    type: SET_USER_INFO,
     payload
 })
