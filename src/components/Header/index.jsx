@@ -31,7 +31,9 @@ const Header = () => {
           <div className="item">Bài viết</div>
           <div className="item">Liên hệ</div>
           {userInfo && userInfo?.role === 1 && (
-            <div className="item">Liên hệ</div>
+            <div onClick={() => navigate("/management")} className="item">
+              Quản lý
+            </div>
           )}
         </div>
         <div className="right">
