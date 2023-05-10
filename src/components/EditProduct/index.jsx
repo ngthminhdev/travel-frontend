@@ -14,8 +14,7 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { axiosAuth } from "../../app/utils/axios.util";
 import "./add-product.scss";
-import { validationSchema, placeholders } from "./validate-form";
-import { Utils } from "../../app/utils";
+import { initialValues, validationSchema, placeholders } from "./validate-form";
 
 const endPoint = process.env.REACT_APP_ENDPOINT;
 const AddProduct = ({ tourData }) => {
@@ -23,7 +22,7 @@ const AddProduct = ({ tourData }) => {
     tourName: tourData?.tourName || "",
     description: tourData?.description || "",
     startPlace: tourData?.startPlace || "",
-    startTime: moment(tourData?.startTime) || "",
+    // startTime: tourData?.startTime || null,
     price: tourData?.price || 0,
     discount: tourData?.discount || 0,
     quantity: tourData?.quantity || 0,
@@ -125,14 +124,15 @@ const AddProduct = ({ tourData }) => {
         <Form.Item label="Thời gian khởi hành">
           <DatePicker
             name="startTime"
-            defaultValue={moment(initialValues.startTime, true)}
+            // defaultValue={initialValues.startTime}
+            // className="w-[400px]"
             format="DD-MM-YYYY hh:mm:ss"
             placeholder={placeholders.startTime}
             showTime
             onChange={(value) => {
               setFieldValue(
                 "startTime",
-                moment(value).format("DD-MM-YYYY HH:mm:ss")
+                moment(value).format("DD-MM-YYYY hh:mm:ss")
               );
             }}
           />

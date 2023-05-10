@@ -1,9 +1,11 @@
 import { Card, Button } from "antd";
-import { PlusCircleOutlined } from "@ant-design/icons";
 import { HiOutlineTicket } from "react-icons/hi";
+import { AiOutlineShoppingCart } from "react-icons/ai";
 
 import "./travel-card.scss";
+import { useNavigate } from "react-router-dom";
 const TravelCard = ({ data }) => {
+  const navigate = useNavigate();
   return (
     <Card
       className="w-[400px] max-h-[600px] shadow-lg"
@@ -33,11 +35,11 @@ const TravelCard = ({ data }) => {
         description={data.description}
       />
       <div className="mt-4">
-        <div>
-          <i className="mt-3 scale-0">
+        <div className="flex items-center">
+          <i className="mt-1 mr-1">
             <HiOutlineTicket />
           </i>
-          Nơi khởi hành:
+          Nơi khởi hành: {data.startPlace}
         </div>
         <span className="text-gray-500 line-through mr-3">{data.price}</span>
         <span
@@ -46,8 +48,17 @@ const TravelCard = ({ data }) => {
         >
           {data.price}
         </span>
-        <Button type="primary" icon={<PlusCircleOutlined />} size="large">
-          Xem thêm
+        <Button
+          type="primary"
+          size="large"
+          onClick={() => navigate(`/tour-detail/${data.id}`)}
+        >
+          <div className="flex items-center">
+            <i className="mt-1 mr-2">
+              <AiOutlineShoppingCart />
+            </i>
+            Đặt ngay
+          </div>
         </Button>
       </div>
     </Card>

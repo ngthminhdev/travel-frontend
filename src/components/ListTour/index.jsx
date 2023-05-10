@@ -1,12 +1,17 @@
 import React, { useEffect, useState } from "react";
-import Loading from "../Loading";
+import { Button, Modal, Table, message } from "antd";
 import { axiosAuth } from "../../app/utils/axios.util";
-import { Button, Table, message } from "antd";
-
-const resourcesEndpoint = process.env.REACT_APP_RESOURCE;
+import AddProduct from "../AddProduct";
+import Loading from "../Loading";
 
 function ListTour() {
   const [data, setData] = useState(null);
+  const [isOpen, setIsOpen] = useState(false);
+  const [tourData, setTourData] = useState(null);
+  const [pagination, setPagination] = useState({
+    current: 1,
+    pageSize: 5,
+  });
 
   useEffect(() => {
     const fetch = () => {
@@ -17,8 +22,12 @@ function ListTour() {
     };
 
     fetch();
-    console.log(data);
   }, []);
+
+  const handleCancle = () => {
+    setIsOpen(false);
+    setTourData(null);
+  };
 
   const columns = [
     {
@@ -87,14 +96,61 @@ function ListTour() {
     },
   ];
 
-  const handleEdit = (id) => console.log(id);
-  const handleDelete = (id) => console.log(id);
+  const handleEdit = async (id) => {
+    try {
+      const res = await axiosAuth.get(`/travel/get-tour/${id}`);
+      setTourData(res.data.data);
+      setIsOpen(true);
+    } catch (e) {
+      message.error(e.response.data.message);
+      setIsOpen(false);
+    }
+  };
+
+  const handleDelete = async (id) => {
+    try {
+      const res = await axiosAuth.delete(`/travel/remove/${id}`);
+      message.success(res.data.message);
+      console.log("🚀 ~ file: index.jsx:115 ~ handleDelete ~ res:", res);
+      setData([...data].filter((item) => item.id !== id));
+    } catch (e) {
+      message.error(e.response.data.message);
+    }
+  };
+
+  const handleOk = () => {
+    console.log("ok");
+  };
+
+  const handlePageChange = (page, pageSize) => {
+    setPagination({
+      current: page,
+      pageSize: pageSize,
+    });
+  };
 
   if (!data) return <Loading />;
 
   return (
     <div className="h-screen">
-      <Table columns={columns} dataSource={data} />;
+      <Modal
+        title="Chỉnh sửa Tour"
+        open={isOpen}
+        onOk={handleOk}
+        onCancel={handleCancle}
+      >
+        <AddProduct tourData={tourData} />
+      </Modal>
+      <Table
+        columns={columns}
+        dataSource={data}
+        pagination={{
+          current: pagination.current,
+          pageSize: pagination.pageSize,
+          total: data.length,
+          onChange: handlePageChange,
+        }}
+      />
     </div>
   );
 }
