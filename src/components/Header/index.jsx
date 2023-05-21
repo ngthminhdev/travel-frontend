@@ -22,7 +22,7 @@ const Header = () => {
       <nav className="flex flex-row justify-between">
         <div className="left logo">
           <a href={endPoint}>
-            <img src={Logo} />
+            <img src={Logo} style={{ width: "100px" }} />
           </a>
         </div>
         <div className="middle flex flex-row">
@@ -46,7 +46,20 @@ const Header = () => {
           <div className="cursor-pointer user-icon">
             {userInfo ? (
               userInfo?.avatar ? (
-                <Loading />
+                <div
+                  className="relative"
+                  onMouseOver={() => setUserMenuOpen(true)}
+                  onMouseLeave={() => setUserMenuOpen(false)}
+                >
+                  <div onClick={() => navigate("/profile")}>
+                    <Avatar src={userInfo.avatar} size="35" round={true} />
+                  </div>
+                  {userMenuOpen && (
+                    <div className="z-50 absolute top-10 right-0">
+                      <UserMenu />
+                    </div>
+                  )}
+                </div>
               ) : (
                 <div
                   className="relative"

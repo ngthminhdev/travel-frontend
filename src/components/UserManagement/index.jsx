@@ -4,7 +4,7 @@ import { axiosAuth } from "../../app/utils/axios.util";
 import AddProduct from "../AddProduct";
 import Loading from "../Loading";
 
-function ListTour() {
+function UserManagement() {
   const [data, setData] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
   const [tourData, setTourData] = useState(null);
@@ -16,12 +16,13 @@ function ListTour() {
   useEffect(() => {
     const fetch = () => {
       axiosAuth
-        .get("/travel/get-all-tour")
+        .get("/admin/get-all-user")
         .then((res) => setData(res.data.data))
         .catch((e) => message.error(e.response.data.message));
     };
 
     fetch();
+    console.log(data);
   }, []);
 
   const handleCancle = () => {
@@ -31,48 +32,40 @@ function ListTour() {
 
   const columns = [
     {
-      title: "Tên tour",
-      dataIndex: "tourName",
-      key: "tourName",
+      title: "Tên người dùng",
+      dataIndex: "username",
+      key: "username",
     },
     {
-      title: "Mô tả",
-      dataIndex: "description",
-      key: "description",
+      title: "Số điện thoại",
+      dataIndex: "phone",
+      key: "phone",
       ellipsis: true, // thu gọn mô tả
       width: 150, // giới hạn chiều rộng của cột
     },
     {
-      title: "Giá",
-      dataIndex: "price",
-      key: "price",
-      render: (value) =>
-        new Intl.NumberFormat("vi-VN", {
-          style: "currency",
-          currency: "VND",
-        }).format(value),
+      title: "Ngày sinh",
+      dataIndex: "dateOfBirth",
+      key: "dateOfBirth",
     },
     {
-      title: "Slot",
-      dataIndex: "quantity",
-      key: "quantity",
+      title: "Tình trạng",
+      dataIndex: "isVerified",
+      key: "isVerified",
+      render: (value) => (value === 0 ? "Chưa xác minh" : "Đã xác minh"),
     },
     {
-      title: "Start Time",
-      dataIndex: "startTime",
-      key: "startTime",
+      title: "Phân quyền",
+      dataIndex: "role",
+      key: "role",
+      render: (value) => (value === 0 ? "User" : "Admin"),
     },
     {
-      title: "Start Place",
-      dataIndex: "startPlace",
-      key: "startPlace",
-    },
-    {
-      title: "Ảnh",
-      dataIndex: "image",
-      key: "image",
+      title: "Avatar",
+      dataIndex: "avatar",
+      key: "avatar",
       render: (image) => (
-        <img src={image} alt="Product Image" style={{ width: "130px" }} />
+        <img src={image} alt="User avatar" style={{ width: "130px" }} />
       ),
     },
     {
@@ -118,8 +111,7 @@ function ListTour() {
   };
 
   const handleOk = () => {
-    setIsOpen(false);
-    setTourData(null);
+    console.log("ok");
   };
 
   const handlePageChange = (page, pageSize) => {
@@ -136,12 +128,8 @@ function ListTour() {
       <Modal
         title="Chỉnh sửa Tour"
         open={isOpen}
-        footer={[
-          <Button key="cancel" onClick={handleCancle}>
-            Hủy
-          </Button>,
-          <Button key="ok" style={{ display: "none" }} />,
-        ]}
+        onOk={handleOk}
+        onCancel={handleCancle}
       >
         <AddProduct tourData={tourData} />
       </Modal>
@@ -159,4 +147,4 @@ function ListTour() {
   );
 }
 
-export default ListTour;
+export default UserManagement;

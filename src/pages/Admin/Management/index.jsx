@@ -3,12 +3,11 @@ import "./management.scss";
 import { Tabs } from "antd";
 import AddProduct from "../../../components/AddProduct";
 import ListTour from "../../../components/ListTour";
+import UserManagement from "../../../components/UserManagement";
+import LisOrderTour from "../../../components/ListOrderTour";
 const { TabPane } = Tabs;
 
 function Management() {
-  function callback(key) {
-    console.log(key);
-  }
   return (
     <div className="management">
       <div className=" min-h-screen flex flex-col">
@@ -18,11 +17,14 @@ function Management() {
               <TabPane tab="Add Tour" key="1">
                 <AddProduct />
               </TabPane>
-              <TabPane tab="Quan Ly Tour" key="2">
+              <TabPane tab="Quản lý Tour" key="2">
                 <ListTour />
               </TabPane>
-              <TabPane tab="Quan Ly User" key="3">
-                Nội dung liên hệ
+              <TabPane tab="Quản lý Order Tour" key="3">
+                <LisOrderTour />
+              </TabPane>
+              <TabPane tab="Quản lý User" key="4">
+                <UserManagement />
               </TabPane>
             </Tabs>
           </div>

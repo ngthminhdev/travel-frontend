@@ -1,4 +1,4 @@
-import { Button, InputNumber, message } from "antd";
+import { Button, InputNumber, Rate, message } from "antd";
 import React, { useEffect, useRef, useState } from "react";
 import { AiOutlineFieldTime } from "react-icons/ai";
 import { BiComment } from "react-icons/bi";
@@ -6,24 +6,31 @@ import { HiOutlineTicket } from "react-icons/hi";
 import { MdOutlineDiscount, MdOutlinePlace } from "react-icons/md";
 import { RiAccountPinCircleLine, RiHotelLine } from "react-icons/ri";
 import { FaMoneyBill } from "react-icons/fa";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { axiosAuth } from "../../app/utils/axios.util";
-import BuyTourForm from "../../components/BuyTourForm";
+import OrderTourForm from "../../components/OrderTourForm";
 import Loading from "../../components/Loading";
 import "./tour-detail.scss";
 import { Utils } from "../../app/utils";
+import { useStore } from "../../store/hooks";
+import { setOrderTourInfo } from "../../store/actions";
+import AddFeedBack from "../../components/AddFeedBack";
+import FeedbackList from "../../components/FeedbackList";
 
 function TourDetai() {
   const { tourId } = useParams();
+  const navigate = useNavigate();
+
+  const [state, dispatch] = useStore({});
+  const { orderTourInfo } = state;
 
   const [tour, setTour] = useState(null);
+  const [tourComments, setTourComments] = useState(null);
   const [tourist, setTourist] = useState(0);
+  const [payment, setPayment] = useState(0);
+  const [isSubmit, setIsSubmit] = useState(false);
 
   const childRef = useRef(null);
-
-  const handleSubmit = () => {
-    childRef.current.submit();
-  };
 
   useEffect(() => {
     const fetch = () => {
@@ -31,17 +38,57 @@ function TourDetai() {
         .get("/travel/get-tour/" + tourId)
         .then((res) => setTour(res.data.data))
         .catch((e) => message.error(e.response.data.message));
+
+      axiosAuth
+        .get("/feedback/" + tourId)
+        .then((res) => setTourComments(res.data.data))
+        .catch((e) => message.error(e.response.data.message));
     };
 
     fetch();
-    console.log(tour);
   }, []);
 
   const handleTouristChange = (num) => {
     setTourist(num);
+    setPayment(
+      num > 0 ? tour.price * num - (tour.price * tour.discount) / 100 : 0
+    );
   };
 
-  if (!tour)
+  useEffect(() => {
+    if (!orderTourInfo || !payment || !tourist) return;
+
+    const data = {
+      ...orderTourInfo,
+      totalPayment: payment,
+      touristNumber: tourist,
+    };
+
+    axiosAuth
+      .post("/travel/order-tour/" + tourId, data)
+      .then((res) => {
+        setIsSubmit(true);
+        message.success(res.data.message);
+        dispatch(
+          setOrderTourInfo({
+            ...data,
+            price: tour.price,
+            discount: tour.discount,
+          })
+        );
+        setTimeout(() => navigate(`/tour-payment/${tourId}`), 2000);
+      })
+      .catch((e) => {
+        setIsSubmit(false);
+        message.error(e.response.data.message);
+      });
+  }, [orderTourInfo]);
+
+  const handleOrder = () => {
+    childRef.current.submit();
+  };
+
+  if (!tour || !tourComments)
     return (
       <div className="tour-detail flex justify-center items-center">
         <Loading />
@@ -132,7 +179,7 @@ function TourDetai() {
           <div className="mt-8">
             <h3 className="text-[18px]">Thông tin liên lạc</h3>
             <div className="bg-slate-100 p-4">
-              <BuyTourForm ref={childRef} />
+              <OrderTourForm ref={childRef} />
               <div className="flex items-center">
                 <label className="mr-4">Số lượng hành Khách:</label>
                 <InputNumber
@@ -169,10 +216,7 @@ function TourDetai() {
             <div className="flex mt-8 mr-3 pl-8 text-[18px] font-bold float-right">
               TỔNG CỘNG:{" "}
               <span className="text-red-500 text-[18px] font-bold ml-2">
-                {Utils.formatPrice(
-                  tourist > 0 &&
-                    tour.price * tourist - (tour.price * tour.discount) / 100
-                ) || 0}
+                {Utils.formatPrice(payment || 0)}
               </span>
               <i className="mt-1.5 ml-3 ">
                 <FaMoneyBill className="scale-150" />
@@ -184,10 +228,40 @@ function TourDetai() {
                 danger
                 htmlType="submit"
                 className="w-full h-[40px] font-bold"
-                onClick={handleSubmit}
+                onClick={handleOrder}
               >
-                <span className="text-[18px]">ĐẶT NGAY</span>
+                <span className="text-[18px]">
+                  {isSubmit ? "ĐANG XỬ LÝ..." : "ĐẶT NGAY"}
+                </span>
               </Button>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="tour-feedback text-primary-20 mt-14">
+        <h3 className="text-[18px] text-primary-200text-center mt-4">
+          Phản hồi
+        </h3>
+        <div className="flex">
+          <div className="left w-[60%] pr-2 pl-2">
+            <div className="mt-4">
+              <AddFeedBack tourId={tourId} />
+            </div>
+          </div>
+          <div className="w-[38%] ml-10 pr-2 pl-2">
+            <div className="mt-4">
+              <div className="flex items-center mb-8">
+                <h3 className="text-[18px] text-primary-200text-center mt-4">
+                  Đánh giá:{" "}
+                  <span className="text-[18px] text-yellow-500">
+                    {tour.rating}
+                  </span>
+                </h3>
+                <i className="mt-3 ml-3">
+                  <Rate disabled allowHalf defaultValue={tour.rating} />
+                </i>
+              </div>
+              <FeedbackList reviews={tourComments} />
             </div>
           </div>
         </div>
