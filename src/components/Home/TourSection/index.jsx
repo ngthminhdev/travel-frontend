@@ -1,12 +1,10 @@
 import React, { useEffect, useState } from "react";
 
-import "./tour-section.scss";
-import TravelCard from "../../TravelCard";
-import Sale7 from "../../../public/images/sale-slider/sale-7.jpg";
-import Sale8 from "../../../public/images/sale-slider/sale-8.jpg";
-import Sale9 from "../../../public/images/sale-slider/sale-9.jpg";
-import Loading from "../../Loading";
 import { axiosAuth } from "../../../app/utils/axios.util";
+import Loading from "../../Loading";
+import TravelCard from "../../TravelCard";
+import "./tour-section.scss";
+import { message } from "antd";
 
 const TourSection = () => {
   const [data, setData] = useState(null);

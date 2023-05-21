@@ -13,7 +13,7 @@ function Management() {
       <div className=" min-h-screen flex flex-col">
         <div className="bg-white">
           <div className="container mx-auto">
-            <Tabs defaultActiveKey="1" onChange={callback}>
+            <Tabs defaultActiveKey="1">
               <TabPane tab="Add Tour" key="1">
                 <AddProduct />
               </TabPane>

@@ -1,3 +1,4 @@
+import moment from "moment";
 import { LocalStorageItem } from "../enum";
 
 export class Utils {
