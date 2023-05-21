@@ -1,6 +1,6 @@
 {
   "name": "travel-frontend",
-  "version": "0.0.05",
+  "version": "0.0.06",
   "private": true,
   "dependencies": {
     "@ant-design/icons": "^5.0.1",
