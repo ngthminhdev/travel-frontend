@@ -3,11 +3,12 @@ import { Button, Modal, Table, message } from "antd";
 import { axiosAuth } from "../../app/utils/axios.util";
 import AddProduct from "../AddProduct";
 import Loading from "../Loading";
+import EditUser from "../EditUser";
 
 function UserManagement() {
   const [data, setData] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [tourData, setTourData] = useState(null);
+  const [user, setUser] = useState(null);
   const [pagination, setPagination] = useState({
     current: 1,
     pageSize: 5,
@@ -22,12 +23,11 @@ function UserManagement() {
     };
 
     fetch();
-    console.log(data);
   }, []);
 
   const handleCancle = () => {
     setIsOpen(false);
-    setTourData(null);
+    setUser(null);
   };
 
   const columns = [
@@ -77,11 +77,15 @@ function UserManagement() {
           <Button
             type="primary"
             className="mr-2"
-            onClick={() => handleEdit(record.id)}
+            onClick={() => handleEdit(record.userId)}
           >
             Sửa
           </Button>
-          <Button type="primary" danger onClick={() => handleDelete(record.id)}>
+          <Button
+            type="primary"
+            danger
+            onClick={() => handleDelete(record.userId)}
+          >
             Xoá
           </Button>
         </>
@@ -91,8 +95,8 @@ function UserManagement() {
 
   const handleEdit = async (id) => {
     try {
-      const res = await axiosAuth.get(`/travel/get-tour/${id}`);
-      setTourData(res.data.data);
+      const res = await axiosAuth.get(`/user/${id}`);
+      setUser(res.data.data);
       setIsOpen(true);
     } catch (e) {
       message.error(e.response.data.message);
@@ -102,16 +106,12 @@ function UserManagement() {
 
   const handleDelete = async (id) => {
     try {
-      const res = await axiosAuth.delete(`/travel/remove/${id}`);
+      const res = await axiosAuth.delete(`/admin/remove/${id}`);
       message.success(res.data.message);
       setData([...data].filter((item) => item.id !== id));
     } catch (e) {
       message.error(e.response.data.message);
     }
-  };
-
-  const handleOk = () => {
-    console.log("ok");
   };
 
   const handlePageChange = (page, pageSize) => {
@@ -126,12 +126,16 @@ function UserManagement() {
   return (
     <div className="h-screen">
       <Modal
-        title="Chỉnh sửa Tour"
+        title="Chỉnh sửa User"
         open={isOpen}
-        onOk={handleOk}
-        onCancel={handleCancle}
+        footer={[
+          <Button key="cancel" onClick={handleCancle}>
+            Hủy
+          </Button>,
+          <Button key="ok" style={{ display: "none" }} />,
+        ]}
       >
-        <AddProduct tourData={tourData} />
+        <EditUser user={user} />
       </Modal>
       <Table
         columns={columns}

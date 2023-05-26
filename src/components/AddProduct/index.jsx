@@ -14,8 +14,7 @@ import moment from "moment";
 import React, { useEffect, useState } from "react";
 import { axiosAuth } from "../../app/utils/axios.util";
 import "./add-product.scss";
-import { validationSchema, placeholders } from "./validate-form";
-import { Utils } from "../../app/utils";
+import { placeholders, validationSchema } from "./validate-form";
 
 const endPoint = process.env.REACT_APP_ENDPOINT;
 const AddProduct = ({ tourData }) => {
@@ -32,12 +31,12 @@ const AddProduct = ({ tourData }) => {
     isAirplane: tourData?.isAirplane || false,
   };
 
-  const [imageUrl, setImageUrl] = useState(tourData?.image);
+  const [imageUrl, setImageUrl] = useState(tourData?.image || "");
 
   const handleAddTour = async (data) => {
     try {
       const res = await axiosAuth.post("/travel/add-tour", data);
-      message.success(res.data.data.message);
+      message.success(res.data.message);
       resetForm();
     } catch (error) {
       message.error(error.response.data.message);
@@ -52,19 +51,25 @@ const AddProduct = ({ tourData }) => {
     touched,
     resetForm,
   } = useFormik({
-    initialValues: tourData,
-    onSubmit: handleAddTour,
-    validationSchema,
+    initialValues: initialValues,
+    onSubmit: (data) => {
+      handleAddTour(data);
+    },
+    // validationSchema,
   });
 
   const handleImageUpload = async (file) => {
     // tạo một đối tượng FormData để gửi tệp ảnh đến máy chủ của bạn
-    const formData = new FormData();
-    formData.append("file", file);
+    const data = new FormData();
+    data.append("file", file);
 
     try {
       // gửi yêu cầu đến máy chủ để tải lên tệp ảnh
-      const response = await axiosAuth.post("/upload", formData);
+      const response = await axiosAuth.post("/upload", data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
       // lưu URL của tệp ảnh vào state
       setImageUrl(response.data.data);
     } catch (error) {
@@ -88,7 +93,7 @@ const AddProduct = ({ tourData }) => {
 
   return (
     <div className="p-4">
-      <Form onSubmitCapture={handleSubmit}>
+      <Form onFinish={handleSubmit}>
         <Form.Item label="Tên Tour" name="tourName">
           <Input
             name="tourName"
@@ -179,7 +184,7 @@ const AddProduct = ({ tourData }) => {
         <Form.Item label="Dịch vụ đi kèm">
           <Checkbox
             name="isHotel"
-            checked={initialValues.quantity}
+            defaultChecked={initialValues.isHotel}
             onChange={handleCheckbox}
             className="min-w-fit"
           >
@@ -187,7 +192,7 @@ const AddProduct = ({ tourData }) => {
           </Checkbox>
           <Checkbox
             name="isCar"
-            checked={initialValues.isCar}
+            defaultChecked={initialValues.isCar}
             onChange={handleCheckbox}
             className="min-w-fit"
           >
@@ -195,21 +200,22 @@ const AddProduct = ({ tourData }) => {
           </Checkbox>
           <Checkbox
             name="isAirplane"
-            checked={initialValues.isAirplane}
+            defaultChecked={initialValues.isAirplane}
             onChange={handleCheckbox}
             className="min-w-fit"
           >
             Vé Máy Bay
           </Checkbox>
         </Form.Item>
-        <Form.Item label="Ảnh sản phẩm" name="image">
+        <Form.Item label="Ảnh sản phẩm" name="file">
           <Upload
-            name="image"
+            name="file"
             listType="picture-card"
             className="avatar-uploader"
             showUploadList={false}
             beforeUpload={(file) => {
               // giới hạn kích thước của tệp ảnh dưới 1MB
+              console.log(file);
               const isLt1M = file.size / 1024 / 1024 < 1;
               if (!isLt1M) {
                 message.error("Ảnh phải có kích thước dưới 1MB!");
